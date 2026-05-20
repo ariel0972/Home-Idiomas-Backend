@@ -1,4 +1,4 @@
-import { IsString, IsEmail, MinLength, IsOptional, IsIn } from 'class-validator';
+import { IsString, IsEmail, MinLength, IsOptional, IsIn, IsMongoId } from 'class-validator';
 
 export class RegistroDto {
   @IsString({ message: 'O nome deve ser um texto válido.' })
@@ -13,15 +13,11 @@ export class RegistroDto {
   senha: string;
 
   @IsString({ message: 'A role deve ser um texto.' })
-  @IsIn(['ALUNO', 'ADMIN'], { message: 'A role deve ser ALUNO ou ADMIN.' })
+  @IsIn(['ALUNO', 'ADMIN', 'PROFESSOR'], { message: 'A role deve ser ALUNO, ADMIN ou PROFESSOR' })
   role: string;
 
   // Como módulo e professor são opcionais para ADMINs, mas importantes para ALUNOS:
   @IsOptional()
-  @IsString()
-  modulo?: string;
-
-  @IsOptional()
-  @IsString()
-  professor?: string;
+  @IsString({ message: 'O ID da turma fornecido é inálido' })
+  turmaId?: string;
 }

@@ -9,6 +9,14 @@ import { AuthGuard } from '../auth/auth.guard'; // Importando nosso guardião
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get()
+  async listarUsuarios(@Request() req) {
+    if (req.user.role !== 'ADMIN') {
+      throw new ForbiddenException('Apenas administradores podem ver a lista de usuarios.');
+    }
+    return this.usersService.listarTodosUsuarios();
+  }
+
   // Rota para pegar a lista de todos os alunos
   @Get('alunos')
   async listarAlunos(@Request() req) {

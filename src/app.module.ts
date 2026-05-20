@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { AttendanceModule } from './attendance/attendance.module';
 import { QrcodeModule } from './qrcode/qrcode.module';
+import { TurmasModule } from './turmas/turmas.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -16,6 +17,7 @@ import { QrcodeModule } from './qrcode/qrcode.module';
     AuthModule,
     AttendanceModule,
     QrcodeModule,
+    TurmasModule,
   ],
   controllers: [AppController],
   providers: [AppService],

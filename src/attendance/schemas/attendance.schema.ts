@@ -16,11 +16,8 @@ export class Attendance {
   // Salvamos uma cópia da turma e do professor no momento da presença.
   // Isso é realista: se o aluno mudar de turma no ano que vem,
   // o histórico de presenças antigas não quebra.
-  @Prop({ required: true })
-  turma: string;
-
-  @Prop({ required: true })
-  professor: string;
+  @Prop({ type: Types.ObjectId, ref: 'Turma', required: true })
+  turmaId: string;
 }
 
 export const AttendanceSchema = SchemaFactory.createForClass(Attendance);

@@ -44,6 +44,10 @@ export class UsersService {
     return this.userModel.find({ role: 'ALUNO' }).select('-senha').exec();
   }
 
+  async listarTodosUsuarios() {
+    return this.userModel.find().select('-senha').exec();
+  }
+
   // 2. Atualiza os dados de um aluno específico
   async atualizarAluno(id: string, dadosAtualizacao: Partial<User>) {
     // O { new: true } faz o Mongoose devolver o aluno já atualizado

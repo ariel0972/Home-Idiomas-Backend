@@ -47,8 +47,7 @@ export class AttendanceService {
     const novaPresenca = new this.attendanceModel({
       alunoId: new Types.ObjectId(alunoId),
       data: new Date(),
-      turma: aluno.turma || 'Não Informada',
-      professor: aluno.professor || 'Não Informado',
+      turmaId: aluno.turmaId || 'Não Informada',
     });
 
     await novaPresenca.save();

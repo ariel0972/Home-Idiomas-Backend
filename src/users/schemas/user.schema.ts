@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type UserDocument = User & Document;
 
@@ -14,15 +14,16 @@ export class User {
   @Prop({ required: true })
   senha: string; // Receberá o hash do bcrypt depois
 
-  @Prop({ required: true, enum: ['ALUNO', 'ADMIN'], default: 'ALUNO' })
+  @Prop({
+    required: true,
+    enum: ['ALUNO', 'ADMIN', 'PROFESSOR'],
+    default: 'ALUNO',
+  })
   role: string;
 
   // Campos específicos do aluno (podem ser nulos para ADMIN)
-  @Prop()
-  turma: string; // Ex: Módulo 1
-
-  @Prop()
-  professor: string;
+  @Prop({ type: Types.ObjectId, ref: 'Turma' })
+  turmaId: string; // Ex: Módulo 1
 
   @Prop({ default: 1 })
   licao_atual: number;
