@@ -12,7 +12,7 @@ export class User {
   email: string;
 
   @Prop({ required: true })
-  senha: string; // Receberá o hash do bcrypt depois
+  senha: string;
 
   @Prop({
     required: true,
@@ -21,12 +21,14 @@ export class User {
   })
   role: string;
 
-  // Campos específicos do aluno (podem ser nulos para ADMIN)
   @Prop({ type: Types.ObjectId, ref: 'Turma' })
-  turmaId: string; // Ex: Módulo 1
+  turmaId: string;
 
-  @Prop({ default: 1 })
-  licao_atual: number;
+  @Prop({ default: 'L1' })
+  licao_atual: string;
+
+  @Prop({ required: true, enum: ['ATIVO', 'INATIVO'], default: 'ATIVO' })
+  status: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

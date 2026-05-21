@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, UseGuards, Request, ForbiddenException } from '@nestjs/common';
+import { Controller, Post, Get, Put, Body, UseGuards, Request, ForbiddenException, Delete, Param } from '@nestjs/common';
 import { TurmasService } from './turmas.service';
 import { CriarTurmaDto } from './dto/turma.dto';
 import { AuthGuard } from '../auth/auth.guard';
@@ -24,5 +24,22 @@ export class TurmasController {
       throw new ForbiddenException('Você não tem permissão para visualizar as turmas.');
     }
     return this.turmasService.listarTodas();
+  }
+
+  @Put(':id')
+  async editar(@Request() req, @Param('id') id: string, @Body() body: any) {
+    if (req.user.role !== 'ADMIN') {
+      throw new ForbiddenException('Você não tem permissão para Editar as turmas.');
+    }
+    return this.turmasService.editarTurma(id, body);
+  }
+
+  @Delete(':id')
+  async excluir(@Request() req, @Param('id') id: string) {
+    if (req.user.role !== 'ADMIN') {
+      throw new ForbiddenException('Você não tem permissão para Excluir as turmas.');
+    }
+    await this.turmasService.deletarTurma(id);
+    return { message: 'Turma excluída com sucesso.' };
   }
 }

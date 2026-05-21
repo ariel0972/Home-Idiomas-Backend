@@ -9,7 +9,7 @@ import { User, UserSchema } from '../users/schemas/user.schema';
   imports: [
     MongooseModule.forFeature([
       { name: Turma.name, schema: TurmaSchema },
-      { name: User.name, schema: UserSchema }
+      { name: User.name, schema: UserSchema },
     ]),
   ],
   controllers: [TurmasController],

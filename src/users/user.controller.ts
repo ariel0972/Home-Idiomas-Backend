@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Put, Delete, Param, Body, UseGuards, Request, ForbiddenException } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -34,7 +35,7 @@ export class UsersController {
     }
     // Evita que alguém mude a role de ALUNO para ADMIN por acidente na edição
     delete body.role;
-    return this.usersService.atualizarAluno(id, body);
+    return this.usersService.atualizarUsuario(id, body);
   }
 
   // Rota para deletar um aluno definitivamente

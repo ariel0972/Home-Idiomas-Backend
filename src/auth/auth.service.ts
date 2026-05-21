@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -11,10 +11,13 @@ export class AuthService {
   ) {}
 
   async login(email: string, senha_digitada: string) {
-    // 1. Busca o aluno pelo email
     const usuario = await this.usersService.buscarPorEmail(email);
     if (!usuario) {
       throw new UnauthorizedException('Email ou senha incorretos.');
+    }
+
+    if (usuario.status === 'INATIVO'){
+      throw new ForbiddenException('Este usuário foi desativado pela Administração.');
     }
 
     // 2. Compara a senha digitada com o hash salvo no banco
