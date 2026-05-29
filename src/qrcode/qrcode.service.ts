@@ -4,13 +4,13 @@ import * as QRCode from 'qrcode';
 @Injectable()
 export class QrcodeService {
   async generateStaticQrCode(): Promise<string> {
-    // Para esse MVP, o payload é fixo (papel impresso na parede).
-    // Uma dica realista: inclua uma "version". Se um dia você precisar trocar
-    // o papel colado na escola porque alguém vazou o código, você muda a versão aqui.
+    const QrHoje = new Date().toISOString().split('T')[0];
+
     const payload = JSON.stringify({
       action: 'check-in',
       location: 'sede-principal',
       version: '1.0',
+      dataGenarate: QrHoje,
     });
 
     try {

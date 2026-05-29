@@ -26,6 +26,14 @@ export class Turma {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
   alunos: Types.ObjectId[];
+
+  @Prop({
+    enum: ['ATIVA', 'DESCONTINUADA', 'CONCLUÍDA', 'EM ESPERA'],
+  })
+  status: string;
+
+  @Prop({ default: 0 })
+  aulasPrevistas: number;
 }
 
 export const TurmaSchema = SchemaFactory.createForClass(Turma);

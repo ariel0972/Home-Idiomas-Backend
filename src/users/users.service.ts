@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User, UserDocument } from './schemas/user.schema';
-import { Turma, TurmaDocument} from '../turmas/schemas/turma.schema'
+import { Turma, TurmaDocument } from '../turmas/schemas/turma.schema'
 
 @Injectable()
 export class UsersService {
@@ -57,7 +57,7 @@ export class UsersService {
   async atualizarUsuario(id: string, dados: any) {
     if (dados.status === 'INATIVO') {
       const usuarioOriginal = await this.userModel.findById(id);
-      
+
       if (usuarioOriginal && usuarioOriginal.turmaId) {
         // Agora usamos o turmaModel limpo e tipado!
         // Como o Mongoose já sabe que "alunos" é um array de ObjectIds, ele faz o cast automático.
@@ -65,8 +65,8 @@ export class UsersService {
           usuarioOriginal.turmaId,
           { $pull: { alunos: new Types.ObjectId(id) } } as any // O "as any" é o truque final caso o TS reclame da sintaxe do $pull
         ).exec();
-        
-        dados.turmaId = null; 
+
+        dados.turmaId = null;
       }
     }
 
@@ -91,7 +91,7 @@ export class UsersService {
           { $pull: { alunos: new Types.ObjectId(id) } } as any
         ).exec();
       }
-      
+
       // Se for um PROFESSOR, removemos ele do cargo em qualquer turma que ele dava aula
       if (usuarioOriginal.role === 'PROFESSOR') {
         await this.turmaModel.updateMany(
@@ -103,5 +103,26 @@ export class UsersService {
 
     // Passo 2: Agora sim, com os dados fantasmas eliminados, apagamos o documento principal
     return this.userModel.findByIdAndDelete(id).exec();
+  }
+
+  async pesquisarUsuario(termo: string) {
+    if (!termo || termo.trim() === '') {
+      return this.userModel.find({
+        status: { $ne: 'INATIVO' }
+      }).select('-senha').exec();
+    }
+
+    const regex = new RegExp(termo, 'i')
+
+    return this.userModel.find({
+      $or:[
+        { nome: regex },
+        { nome_completo: regex },
+        { email: regex },
+        { cpf: regex },
+        { rg: regex },
+        { matricula: regex },
+      ]
+    }).select('-senha').exec();
   }
 }

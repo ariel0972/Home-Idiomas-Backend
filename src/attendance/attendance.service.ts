@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Attendance, AttendanceDocument } from './schemas/attendance.schema';
 import { User, UserDocument } from '../users/schemas/user.schema';
+import { ClassLog, ClassLogDocument } from 'src/turmas/schemas/class-log.schema';
 
 @Injectable()
 export class AttendanceService {
@@ -13,6 +14,7 @@ export class AttendanceService {
     @InjectModel(Attendance.name)
     private attendanceModel: Model<AttendanceDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(ClassLog.name) private classLogModel: Model<ClassLogDocument>,
   ) {}
 
   async baterPresenca(alunoId: string, payloadQrCode: any, localizacao?: string) {
@@ -25,12 +27,26 @@ export class AttendanceService {
       );
     }
 
+    const dataHoje = new Date().toISOString().split('T')[0];
+    if (payloadQrCode.QrHoje !== dataHoje) {
+      throw new BadRequestException('❌ Este QR Code expirou! Solicite ao professor que abra o código de hoje na lousa.');
+    }
+
+    const aluno = await this.userModel.findById(alunoId);
+    if (!aluno) {
+      throw new BadRequestException('Aluno não localizado no sistema.');
+    }
+
+    if (!aluno.turmaId) {
+      throw new BadRequestException('Você não está vinculado a nenhuma turma ativa.');
+    }
+
     const inicioDia = new Date();
     inicioDia.setHours(0, 0, 0, 0);
-
     const fimDia = new Date();
     fimDia.setHours(23, 59, 59, 999);
 
+    // 1. Verifica duplicidade de presença
     const jaRegistrou = await this.attendanceModel.findOne({
       alunoId: new Types.ObjectId(alunoId),
       data: { $gte: inicioDia, $lte: fimDia },
@@ -42,17 +58,26 @@ export class AttendanceService {
       );
     }
 
-    const aluno = await this.userModel.findById(alunoId);
-    if (!aluno) {
-      throw new BadRequestException('Aluno não localizado no sistema.');
+    // 2. 🚨 CORREÇÃO: Busca se o professor já iniciou o diário de hoje para esta turma
+    const diarioDeHoje = await this.classLogModel.findOne({
+      turmaId: aluno.turmaId,
+      dataAula: { $gte: inicioDia, $lte: fimDia }
+    });
+
+    if (!diarioDeHoje) {
+      throw new BadRequestException(
+        'Aguarde o professor iniciar a aula no sistema antes de bater a presença!'
+      );
     }
 
+    // 3. Salva a presença injetando o classLogId obrigatório para evitar o Erro 500
     const novaPresenca = new this.attendanceModel({
       alunoId: new Types.ObjectId(alunoId),
+      classLogId: diarioDeHoje._id, // 👈 Campo obrigatório preenchido!
       data: new Date(),
-      turmaId: aluno.turmaId || null,
+      turmaId: aluno.turmaId,
       metodo: 'QRCODE',
-      localizacao: localizacao || 'Não nao autorizada',
+      localizacao: localizacao || 'Não autorizada',
     });
 
     await novaPresenca.save();
@@ -134,5 +159,13 @@ export class AttendanceService {
       success: true,
       message: 'Presença manual registrada com sucesso!',
     };
+  }
+
+  async atualizarPresenca(id: string, dados: any) {
+    return this.attendanceModel.findByIdAndUpdate(id, dados, { new: true });
+  }
+
+  async deletarPresenca(id: string) {
+    return this.attendanceModel.findByIdAndDelete(id);
   }
 }

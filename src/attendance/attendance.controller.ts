@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable prettier/prettier */
-import { Controller, Post, Get, Body, UseGuards, Request, ForbiddenException, Query } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, UseGuards, Request, ForbiddenException, Query, Param } from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
 import { AuthGuard } from '../auth/auth.guard';
 
@@ -41,5 +41,15 @@ export class AttendanceController {
     }
     // Repassamos as variáveis para o Service
     return this.attendanceService.listarPresencasDoDia(inicio, fim);
+  }
+
+  @Put(':id')
+  async atualizarPresenca(@Param('id') id: string, @Body() body: any) {
+    return this.attendanceService.atualizarPresenca(id, body);
+  }
+
+  @Delete(':id')
+  async deletarPresenca(@Param('id') id: string) {
+    return this.attendanceService.deletarPresenca(id);
   }
 }

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Put, Delete, Param, Body, UseGuards, Request, ForbiddenException } from '@nestjs/common';
+import { Controller, Get, Put, Delete, Param, Body, UseGuards, Request, ForbiddenException, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from '../auth/auth.guard'; // Importando nosso guardião
 
@@ -25,6 +25,11 @@ export class UsersController {
       throw new ForbiddenException('Apenas administradores podem ver a lista de alunos.');
     }
     return this.usersService.listarTodosAlunos();
+  }
+
+  @Get('search')
+  async buscarUsuarios(@Query('q') termo: string) {
+    return this.usersService.pesquisarUsuario(termo);
   }
 
   // Rota para atualizar professor e turma (e outros dados se precisar)

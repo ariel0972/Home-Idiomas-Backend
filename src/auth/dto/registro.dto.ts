@@ -1,4 +1,4 @@
-import { IsString, IsEmail, MinLength, IsOptional, IsIn, IsMongoId } from 'class-validator';
+import { IsString, IsEmail, MinLength, IsOptional, IsIn } from 'class-validator';
 
 export class RegistroDto {
   @IsString({ message: 'O nome deve ser um texto válido.' })
@@ -9,15 +9,58 @@ export class RegistroDto {
   email: string;
 
   @IsString()
-  @MinLength(8, { message: ' A senha deve ter no mínimo 8 caracteres.' })
+  @MinLength(8, { message: 'A senha deve ter no mínimo 8 caracteres.' })
   senha: string;
 
   @IsString({ message: 'A role deve ser um texto.' })
   @IsIn(['ALUNO', 'ADMIN', 'PROFESSOR'], { message: 'A role deve ser ALUNO, ADMIN ou PROFESSOR' })
   role: string;
 
-  // Como módulo e professor são opcionais para ADMINs, mas importantes para ALUNOS:
   @IsOptional()
-  @IsString({ message: 'O ID da turma fornecido é inálido' })
+  @IsString({ message: 'O ID da turma fornecido é inválido' })
   turmaId?: string;
+
+  @IsOptional()
+  @IsString()
+  nome_completo?: string;
+
+  @IsOptional()
+  @IsString()
+  celular?: string;
+
+  @IsOptional()
+  @IsString()
+  cpf?: string;
+
+  @IsOptional()
+  @IsString()
+  rg?: string;
+
+  @IsOptional()
+  @IsString()
+  nascimento?: string;
+
+  @IsOptional()
+  @IsString()
+  matricula?: string;
+
+  @IsOptional()
+  @IsString()
+  endereco?: string;
+
+  @IsOptional()
+  @IsString()
+  nomeResponsavel?: string;
+
+  @IsOptional()
+  @IsString()
+  celularResponsavel?: string;
+
+  @IsOptional()
+  @IsString()
+  cpfResponsavel?: string;
+
+  @IsOptional()
+  @IsString()
+  rgResponsavel?: string;
 }
