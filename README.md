@@ -6,7 +6,13 @@
 
 ## Descrição
 
-A Home Idiomas é uma escola de idiomas que enfrentava problemas de organização de alunos, turmas e presença. Hoje o gestor ele mantém o controle e registro dos alunos atuais da escola, turmas ativas e inativas, registro de presença dos alunos através de QR Code. Antes os professores tinham que fazer o registro das aulas manualmente, agora possuem um sistema integrado para cada turma.
+A Home Idiomas é uma escola de idiomas que enfrentava problemas de organização de alunos, turmas e presença. O sistema centraliza o gerenciamento de alunos, professores, turmas e registros de presença da escola. Professores podem utilizar o diário de classe integrado para acompanhar aulas, conteúdo aplicado e frequência, enquanto a administração gerencia usuários e turmas através da mesma plataforma.
+
+## 🌐 Produção
+
+- API: https://api-home-idiomas.onrender.com
+- Frontend: SUA_URL_VERCEL
+- Frontend Repository: https://github.com/ariel0972/Home-Idiomas-Frontend
 
 ## Funcionalidades
 - Autenticação;
@@ -20,13 +26,30 @@ A Home Idiomas é uma escola de idiomas que enfrentava problemas de organizaçã
 npm install
 npm run start:dev
 ```
-## Roadmap
-[x] autenticação
-[x] usuários
-[x] presença
-[ ] testes de serviços
-[ ] Docker
-[ ] CI com GitHub Actions
+
+## 🗺️ Roadmap
+- [x] Autenticação
+- [x] Gerenciamento de usuários
+- [x] Gerenciamento de turmas
+- [x] Presença
+- [x] Diário de classe
+- [x] Deploy da API
+- [ ] Aumentar cobertura de testes
+- [ ] Docker
+- [ ] CI com GitHub Actions
+- [ ] Documentação Swagger/OpenAPI
+
+## 🛠️ Tecnologias
+
+- Node.js
+- TypeScript
+- NestJS
+- MongoDB / Mongoose
+- JWT
+- bcrypt
+- class-validator
+- Jest
+- Supertest
 
 ## License
 
