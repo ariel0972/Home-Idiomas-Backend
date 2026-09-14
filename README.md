@@ -11,7 +11,6 @@ A Home Idiomas é uma escola de idiomas que enfrentava problemas de organizaçã
 ## 🌐 Produção
 
 - API: https://api-home-idiomas.onrender.com
-- Frontend: SUA_URL_VERCEL
 - Frontend Repository: https://github.com/ariel0972/Home-Idiomas-Frontend
 
 ## Funcionalidades
