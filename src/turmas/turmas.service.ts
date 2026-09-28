@@ -79,12 +79,12 @@ export class TurmasService {
     const turmaAntiga = await this.turmaModel.findById(id).exec();
 
     const alunosAntigos = turmaAntiga?.alunos ? turmaAntiga.alunos.map(a => a.toString()) : [];
-    const alunosNovos = body?.alunos ? body.alunos.map(a => a.toString()) : [];
+    const alunosNovos = body?.alunos !== undefined ? body.alunos.map(a => a.toString()) : alunosAntigos;
 
     const alunosRemovidos = alunosAntigos.filter(a => !alunosNovos.includes(a));
 
     if (alunosRemovidos.length > 0) {
-      await this.turmaModel.updateMany(
+      await this.userModel.updateMany(
         { _id: { $in: alunosRemovidos } },
         { $unset: { turmaId: '' } },
       );
