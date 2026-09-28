@@ -44,4 +44,46 @@ describe('TurmasService.editarTurma', () => {
       { $unset: { turmaId: '' } },
     );
   });
+
+  it('preserva os vínculos ao editar somente o horário', async () => {
+    // Preparar: a turma já possui um aluno.
+    const turmaModel = {
+      findById: jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue({
+          alunos: ['aluno-1'],
+        }),
+      }),
+      findByIdAndUpdate: jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue({
+          alunos: ['aluno-1'],
+          horario: '19:00 às 21:00',
+        }),
+      }),
+      updateMany: jest.fn().mockResolvedValue({}),
+    };
+
+    const userModel = {
+      updateMany: jest.fn().mockResolvedValue({}),
+    };
+
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        TurmasService,
+        { provide: getModelToken('Turma'), useValue: turmaModel },
+        { provide: getModelToken('User'), useValue: userModel },
+        { provide: getModelToken('ClassLog'), useValue: {} },
+        { provide: getModelToken('Attendance'), useValue: {} },
+      ],
+    }).compile();
+
+    const service = moduleRef.get(TurmasService);
+
+    // Agir: enviar somente o novo horário.
+    await service.editarTurma('turma-1', {
+      horario: '20:00 às 22:00',
+    });
+
+    // Verificar: os vínculos dos usuários não devem ser alterados.
+    expect(userModel.updateMany).not.toHaveBeenCalled();
+  });
 });
