@@ -88,7 +88,7 @@ export class TurmasService {
         { _id: { $in: alunosRemovidos } },
         { $unset: { turmaId: '' } },
       );
-    }
+    } 
 
     const turmaAtualizada = await this.turmaModel
       .findByIdAndUpdate(id, body, { returnDocument: 'after' })
